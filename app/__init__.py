@@ -19,5 +19,5 @@ def create_app(config_name):
 
     from .api.v2 import auth_v2_blueprint as v2_blueprint
     app.register_blueprint(v2_blueprint, url_prefix='/api/v2/auth')
-
+    
     return app
