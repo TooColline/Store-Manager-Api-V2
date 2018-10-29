@@ -35,7 +35,7 @@ class SignUp(Resource):
 
         UserValidator.validate_user_info(self, data)
         hashed_password = generate_password_hash(request_user_password, method='sha256')
-        user = users.UserModels(request_user_email, hashed_password, request_user_role)
+        user = users.UserModels(email=request_user_email, password=hashed_password, role=request_user_role)
         user.save()
         return make_response(jsonify({
             "message": "User created successfully",
