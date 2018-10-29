@@ -62,8 +62,7 @@ class Login(Resource):
         user = users.UserModels.fetch_user_by_email(request_user_email)
         if not user:
             abort(make_response(jsonify({
-                "message": "Sorry, cannot find user with that email"
-            })), 404)
+                "message": "Sorry, cannot find user with that email"}), 404))
 
         users_email = user[0][1]
         users_password = user[0][2]
