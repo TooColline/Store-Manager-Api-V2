@@ -1,9 +1,9 @@
-# env:
-#   global:
-#     - APP_SETTINGS="development"
-#     - DATABASE_URL="dbname='store_manager' host='localhost' port='5432' user='postgres' password='Password2#'"
-#     - DATABASE_TEST_URL="dbname='store_manager_test' host='localhost' port='5432' user='postgres' password='Password2#'"
-#     - SECRET_KEY="thisissecret"
+env:
+  global:
+    - APP_SETTINGS="development"
+    - DATABASE_URL="dbname='store_manager' host='localhost' port='5432' user='postgres' password='Password2#'"
+    - DATABASE_TEST_URL="dbname='store_manager_test' host='localhost' port='5432' user='postgres' password='Password2#'"
+    - SECRET_KEY="thisissecret"
 
 language: python
 
