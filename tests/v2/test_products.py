@@ -129,26 +129,40 @@ class Products(base_test.BaseTestClass):
         self.assertEqual(general_helper_functions.convert_json(
             response)['products'][0][1], self.Product['name'])
     
-    def test_get_specific_product(self):
-        """Test GET /products/id - when product exist"""
+    # def test_get_specific_product(self):
+    #     """Test GET /products/id - when product exist"""
+
+    #     self.register_admin_test_account()
+    #     token = self.login_admin_test()
+
+    #     insert_query = """INSERT INTO products (name, price, category)
+    #     VALUES ('Oppo', 30000, 'Phones')
+    #     """
+    #     db.insert_to_db(insert_query)
+
+    #     query = """SELECT * FROM products WHERE name = 'Oppo'"""
+    #     product_id = db.select_from_db(query)
+    #     response = self.app_test_client.get(
+    #         '{}/product/{}'.format(self.base_url, product_id[0][0]),
+    #         headers=dict(Authorization=token),
+    #         content_type='application/json'
+    #         )
+
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(general_helper_functions.convert_json(
+    #         response)['product'][0][1], self.Product['name'])
+    
+    def test_get_specific_product_not_existing(self):
+        """Test GET /products/<int:product_id> - when product does not exist"""
 
         self.register_admin_test_account()
         token = self.login_admin_test()
 
-        insert_query = """INSERT INTO products (name, price, category)
-        VALUES ('Oppo', 30000, 'Phones')
-        """
-        db.insert_to_db(insert_query)
-
-        query = """SELECT * FROM products WHERE name = 'Oppo'"""
-        product_id = db.select_from_db(query)
         response = self.app_test_client.get(
-            '{}/product/{}'.format(self.base_url, product_id[0][0]),
+            '{}/product/1000'.format(self.base_url),
             headers=dict(Authorization=token),
             content_type='application/json'
             )
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(general_helper_functions.convert_json(
-            response)['product'][0][1], self.Product['name'])
+        self.assertEqual(response.status_code, 404)
         
