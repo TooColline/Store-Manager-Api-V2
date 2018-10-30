@@ -50,3 +50,43 @@ class Products(Resource):
                 "category": category
             }
         }), 201)
+    
+    def get(self):
+        """GET /products retrieves all products"""
+
+        # token_verification.verify_tokens()
+        
+        fetch = products.ProductsModel()
+        fetched = fetch.fetch_all_the_products()
+
+        if not fetched:
+            abort(make_response(jsonify({
+                "message": "Sorry, there are no products in the database yet"
+            })), 404)
+
+        response = make_response(jsonify({
+            "message": "All the products have been fetched successfully",
+            "products": fetched
+        }), 201)
+        
+        return response
+
+class FetchSpecificProduct(Resource):
+    """Simple class to fetch specific product"""
+    def get(self, product_id):
+        """GET /products/<int:product_id> fetches specific product"""
+        
+        token_verification.verify_tokens()
+        query = """SELECT * FROM products WHERE product_id = '{}'""".format(product_id)
+
+        fetched_product = db.select_from_db(query)
+
+        if not fetched_product:
+            return make_response(jsonify({
+            "message": "Product with id {} is not existing".format(product_id),
+            }), 404)
+        
+        return make_response(jsonify({
+            "message": "{} retrieved successfully".format(fetched_product[0][1]),
+            "product": fetched_product
+            }), 200)
