@@ -1,6 +1,8 @@
 import json
 from . import base_test
 from . import general_helper_functions
+from app.api.v2.models import products
+from app.api.v2 import db
 
 class Products(base_test.BaseTestClass):
     """Tests products specific endpoints"""
@@ -106,3 +108,28 @@ class Products(base_test.BaseTestClass):
         self.assertEqual(general_helper_functions.convert_json(
             response)['message'],
             'Sorry. A product with a similar name already exists in the database.')
+    
+    def test_retrieve_specific_product(self):
+        """Test GET /products/id - when product exist"""
+
+        self.register_admin_test_account()
+        token = self.login_admin_test()
+
+        # send a dummy data response for testing
+        insert_query = """INSERT INTO products (name, price, category)
+        VALUES ('Phone Model 1', 50000, 'Phones')
+        """
+        db.insert_to_db(insert_query)
+
+        query = """SELECT * FROM products where name = 'Phone Model 1'"""
+        product_id = db.select_from_db(query)
+        response = self.app_test_client.get(
+            '{}/product/{}'.format(self.base_url, product_id[0][0]),
+            headers=dict(Authorization=token),
+            content_type='application/json'
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(general_helper_functions.convert_json(
+            response)['product'][0][1], self.Product['name'])
+        
