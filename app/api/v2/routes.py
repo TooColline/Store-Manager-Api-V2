@@ -7,6 +7,7 @@ API = Api(v2_blueprint)
 API_AUTH = Api(auth_v2_blueprint)
 
 API.add_resource(products.Products, '/products')
+API.add_resource(products.FetchSpecificProduct, '/products/<int:product_id>')
 
 API_AUTH.add_resource(authorization.SignUp, '/signup')
 API_AUTH.add_resource(authorization.Login, '/login')
