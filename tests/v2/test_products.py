@@ -108,20 +108,39 @@ class Products(base_test.BaseTestClass):
         self.assertEqual(general_helper_functions.convert_json(
             response)['message'],
             'Sorry. A product with a similar name already exists in the database.')
+    def test_get_all_products(self):
+        """Test GET /products - when products exist"""
+        self.register_admin_test_account()
+        token = self.login_admin_test()
+
+        # send a dummy data response for testing
+        self.app_test_client.post('{}/products'.format(
+            self.base_url), json=self.Product, headers=dict(Authorization=token),
+            content_type='application/json')
+
+
+        response = self.app_test_client.get(
+            '{}/products'.format(self.base_url),
+            headers=dict(Authorization=token),
+            content_type='application/json'
+            )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(general_helper_functions.convert_json(
+            response)['products'][0][1], self.Product['name'])
     
-    def test_retrieve_specific_product(self):
+    def test_get_specific_product(self):
         """Test GET /products/id - when product exist"""
 
         self.register_admin_test_account()
         token = self.login_admin_test()
 
-        # send a dummy data response for testing
         insert_query = """INSERT INTO products (name, price, category)
-        VALUES ('Phone Model 1', 50000, 'Phones')
+        VALUES ('Oppo', 30000, 'Phones')
         """
         db.insert_to_db(insert_query)
 
-        query = """SELECT * FROM products where name = 'Phone Model 1'"""
+        query = """SELECT * FROM products WHERE name = 'Oppo'"""
         product_id = db.select_from_db(query)
         response = self.app_test_client.get(
             '{}/product/{}'.format(self.base_url, product_id[0][0]),
