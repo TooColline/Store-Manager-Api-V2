@@ -1,7 +1,8 @@
 """This module initializes the db connection and run queries to set up tables"""
+import psycopg2
 import sys
 
-import psycopg2
+from instance.config import config
 
 def initialize_db(db_url=None):
     try:
