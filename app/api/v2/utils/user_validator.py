@@ -37,3 +37,20 @@ class UserValidator():
         elif not re.search("^.*(?=.*[@#$%^&+=]).*$", self.password):
             Message = "Password must include at least one special charater"
             abort(400, Message)
+    
+    @staticmethod
+    def check_for_duplication(column, table, value):
+        """Checks for a value duplication
+
+        Aborts if there is a duplication
+        """
+        
+        query = """
+        SELECT {} FROM {} WHERE {}.{} = '{}'
+        """.format(column, table, table, column, value)
+        
+        duplicated = db.select_from_db(query)
+
+        if duplicated:
+            abort(make_response(jsonify(
+                message="Sorry. A product with a similar name already exists in the database."), 400))
