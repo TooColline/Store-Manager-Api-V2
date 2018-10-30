@@ -22,3 +22,24 @@ def verify_tokens():
             abort(make_response(jsonify({
                 "Message": "This token is invalid"
             }), 403))
+
+def verify_post_product_fields(product_price, product_name, category):
+    if not isinstance(product_price, int):
+        abort(make_response(jsonify(
+            message="Product price should be an integer"
+        ), 400))
+
+    if product_price < 1:
+        abort(make_response(jsonify(
+            message="Price of the product should be a positive integer"
+        ), 400))
+
+    if not isinstance(product_name, str):
+        abort(make_response(jsonify(
+            message="Product name should be in a string format"
+        ), 400))
+
+    if not isinstance(category, str):
+        abort(make_response(jsonify(
+            message="Category should be in a string format"
+        ), 400))
