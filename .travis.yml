@@ -23,6 +23,7 @@ before_script:
 # command to run tests
 script:
   - coverage run --source=app.api.v2.views -m pytest tests/v2 -v -W error::UserWarning && coverage report
+  - coveralls
 
 # Post coverage results to coverage.io
 after-success:
