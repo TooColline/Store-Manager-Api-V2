@@ -148,9 +148,14 @@ class Products(base_test.BaseTestClass):
     #         content_type='application/json'
     #         )
 
-    #     self.assertEqual(response.status_code, 200)
+    #     #self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(general_helper_functions.convert_json(
+    #         response)['message'],
+    #         'Successfully fetched specific product'
+    #         )
     #     self.assertEqual(general_helper_functions.convert_json(
     #         response)['product'][0][1], self.Product['name'])
+        
     
     def test_get_specific_product_not_existing(self):
         """Test GET /products/<int:product_id> - when product does not exist"""
@@ -166,3 +171,55 @@ class Products(base_test.BaseTestClass):
 
         self.assertEqual(response.status_code, 404)
         
+    # def test_modify_product(self):
+    #     """PUT /product/"""
+
+    #     self.register_admin_test_account()
+    #     token = self.login_admin_test()
+
+    #     query = """INSERT INTO products(name, price, category) 
+    #     VALUES('Sheet', 1500, 'Beddings')"""
+        
+    #     db.insert_to_db(query)
+
+    #     query = """SELECT product_id FROM products WHERE name = 'Sheet'"""
+    #     product_id = db.select_from_db(query)
+
+    #     response = self.app_test_client.put('{}/product/{}'.format(
+    #         self.base_url, product_id[0][0]),
+    #          json={
+    #              'name':'Bedcover',
+    #              'price': 1500,
+    #              'category':'Beddings'
+    #          },
+    #         headers=dict(Authorization=token),
+    #         content_type='application/json')
+
+    #     self.assertEqual(response.status_code, 202)
+    #     self.assertEqual(general_helper_functions.convert_json(
+    #         response)['product']['name'], "Bedcover")
+
+    def test_modify_product_with_missing_parameter(self):
+        """PUT /product/"""
+
+        self.register_admin_test_account()
+        token = self.login_admin_test()
+
+        query = """INSERT INTO products(name, price, category) 
+        VALUES('Sheet', 1500, 'Beddings')"""
+        
+        db.insert_to_db(query)
+
+        query = """SELECT product_id FROM products WHERE name = 'Sheet'"""
+        product_id = db.select_from_db(query)
+
+        response = self.app_test_client.put('{}/product/{}'.format(
+            self.base_url, product_id[0][0]),
+             json={
+                 'name':'Sheet',
+                 'category':'Bedding Cover'
+             },
+            headers=dict(Authorization=token),
+            content_type='application/json')
+
+        self.assertEqual(response.status_code, 404)
