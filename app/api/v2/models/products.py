@@ -6,7 +6,8 @@ from .. import db
 
 class ProductsModel():
     '''Initializes a new product'''
-    def __init__(self, name=None, price=None, category=None):
+    def __init__(self, product_id=None, name=None, price=None, category=None):
+        self.product_id = product_id
         self.name = name
         self.price = price
         self.category = category
@@ -25,3 +26,10 @@ class ProductsModel():
 
         query = """SELECT * FROM products"""
         return db.select_from_db(query)
+
+    def put(self):
+        query = """UPDATE products SET name = '{}', price = '{}',
+        category = '{}' WHERE product_id = {}""".format(self.name, self.price,
+                                                        self.category, self.product_id)
+
+        db.insert_to_db(query)

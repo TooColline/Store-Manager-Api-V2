@@ -90,3 +90,37 @@ class FetchSpecificProduct(Resource):
             "message": "{} retrieved successfully".format(fetched_product[0][1]),
             "product": fetched_product
             }), 200)
+    
+    def put(self, product_id):
+        """PUT /product/<int:product_id>"""
+
+        logged_user = token_verification.verify_tokens()
+        general_helper_functions.abort_user_if_not_admin(logged_user)
+
+        data = request.get_json()
+        try:
+            name = data['name']
+            price = data['price']
+            category = data['category']
+
+        except:
+            return make_response(jsonify({
+                "message":"Update the fields you require to"
+            }), 403)
+            
+        general_helper_functions.json_null_request(data)
+        token_verification.verify_post_product_fields(price, name, category)
+
+        get_product_name = data['name'].strip()
+        get_category = data['category'].strip()
+        user_validator.UserValidator.check_for_duplication("name", "products", get_product_name)
+
+        product = products.ProductsModel(product_id=product_id, name=get_product_name,
+                                    price=data['price'], category=get_category)
+
+        product.put()
+        
+        return make_response(jsonify({
+            "message":"Product has been modified successfully",
+            "product": data
+        }), 202)

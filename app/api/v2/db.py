@@ -71,7 +71,7 @@ def query_db(query=None, db_url=None):
 
     conn = None
     if db_url is None:
-        db_url = "dbname='store_manager' host='localhost' port='5432' user='postgres' password='Password2#'"
+        db_url = config['db_url']
     try:
         # connecting to the db
         conn = psycopg2.connect(db_url)
