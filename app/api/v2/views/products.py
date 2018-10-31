@@ -78,8 +78,8 @@ class FetchSpecificProduct(Resource):
         
         token_verification.verify_tokens()
         query = """SELECT * FROM products WHERE product_id = '{}'""".format(product_id)
-
         fetched_product = db.select_from_db(query)
+      
 
         if not fetched_product:
             return make_response(jsonify({
@@ -92,7 +92,7 @@ class FetchSpecificProduct(Resource):
             }), 200)
     
     def put(self, product_id):
-        """PUT /product/<int:product_id>"""
+        """PUT /product/"""
 
         logged_user = token_verification.verify_tokens()
         general_helper_functions.abort_user_if_not_admin(logged_user)
@@ -124,3 +124,11 @@ class FetchSpecificProduct(Resource):
             "message":"Product has been modified successfully",
             "product": data
         }), 202)
+
+    def delete(self, product_id):
+        product = products.ProductsModel(product_id=product_id)
+        product.delete()
+
+        return make_response(jsonify({
+            "message": "Product has been deleted successfully"
+        }), 200)

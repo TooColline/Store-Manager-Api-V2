@@ -33,3 +33,7 @@ class ProductsModel():
                                                         self.category, self.product_id)
 
         db.insert_to_db(query)
+
+    def delete(self):
+        query = """DELETE FROM products WHERE product_id = {}""".format(self.product_id)
+        db.insert_to_db(query)
