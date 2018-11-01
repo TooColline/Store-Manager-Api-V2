@@ -30,6 +30,8 @@ class Products(Resource):
         try:
             name = data['name']
             price = data['price']
+            min_quantity = data['min_quantity']
+            inventory = data['inventory']
             category = data['category']
         except KeyError:
             # If the product added is missing a required parameter
@@ -38,7 +40,7 @@ class Products(Resource):
         token_verification.verify_post_product_fields(price, name, category)
         user_validator.UserValidator.check_for_duplication("name", "products", name)
 
-        product_added = products.ProductsModel(name=name, price=price,category=category)
+        product_added = products.ProductsModel(name=name, price=price, min_quantity=min_quantity, inventory=inventory, category=category)
                                           
         product_added.save()
 
@@ -47,6 +49,8 @@ class Products(Resource):
             "product": {
                 "name": name,
                 "price": price,
+                "min_quantity": min_quantity,
+                "inventory": inventory,
                 "category": category
             }
         }), 201)
@@ -54,8 +58,8 @@ class Products(Resource):
     def get(self):
         """GET /products retrieves all products"""
 
-        # token_verification.verify_tokens()
-        
+        token_verification.verify_tokens()
+
         fetch = products.ProductsModel()
         fetched = fetch.fetch_all_the_products()
 
@@ -126,9 +130,18 @@ class FetchSpecificProduct(Resource):
         }), 202)
 
     def delete(self, product_id):
-        product = products.ProductsModel(product_id=product_id)
-        product.delete()
+        """Delete products by id"""
+        query = """SELECT * FROM products WHERE product_id = {}""".format(product_id)
+        product = db.select_from_db(query)
+        
+        if not product:
 
-        return make_response(jsonify({
-            "message": "Product has been deleted successfully"
-        }), 200)
+            return make_response(jsonify(
+                {"message": "Product of id {} is not available".format(product_id)}), 404)
+        else:
+            product = products.ProductsModel(product_id=product_id)
+            product.delete()
+
+            return make_response(jsonify({
+                "message": "Product has been deleted successfully"
+            }), 200)

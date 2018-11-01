@@ -25,7 +25,7 @@ def abort_user_if_not_admin(user):
             abort(make_response(jsonify(
                 message="Unauthorized access, please contact your administrator!"
             ), 401))
-    except:
+    except KeyError:
         abort(make_response(jsonify(
             message="Invalid token"
         ), 401))
