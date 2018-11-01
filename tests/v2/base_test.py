@@ -22,16 +22,20 @@ class BaseTestClass(unittest.TestCase):
             initialize_db(self.db_url)
 
         self.Product = {
-        'name': 'Carpet',
-        'price': 17000,
-        'category': 'Home & Furniture'
+        "name": "Carpet",
+        "price": 17000,
+        "min_quantity": 7,
+        "inventory": 7,
+        "category": "Home & Furniture"
         }
 
         self.SaleOrder = {
-            'name': 'Carpet',
-            'price': 17000,
-            'quantity': 2,
-            'totalamt': (17000 * 2)
+        'items': [
+            {
+                'name': 'Carpet',
+                'quantity': 4
+            }
+        ]
         }
         
     def tearDown(self):
