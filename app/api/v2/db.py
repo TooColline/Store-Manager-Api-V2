@@ -24,7 +24,7 @@ def create_db_tables():
     """Setting up the database tables"""
 
     users_table = """
-    CREATE TABLE users (
+    CREATE TABLE IF NOT EXISTS users (
         user_id SERIAL PRIMARY KEY,
         email VARCHAR (100) NOT NULL UNIQUE,
         password VARCHAR (100) NOT NULL,
@@ -32,38 +32,48 @@ def create_db_tables():
     )"""
 
     products_table = """
-    CREATE TABLE products (
+    CREATE TABLE IF NOT EXISTS products (
         product_id SERIAL PRIMARY KEY,
         name VARCHAR (24) NOT NULL,
         price INTEGER NOT NULL,
-        category VARCHAR (50) NOT NULL
+        min_quantity INTEGER NOT NULL,
+        inventory INTEGER NOT NULL,
+        category VARCHAR (30) NOT NULL
     )"""
 
     sales_table = """
-    CREATE TABLE sales (
+    CREATE TABLE IF NOT EXISTS sales (
         sale_id SERIAL PRIMARY KEY,
         date_ordered TIMESTAMP DEFAULT NOW(),
-        name VARCHAR (24) NOT NULL,
-        price INTEGER NOT NULL,
-        quantity INTEGER NOT NULL,
-        totalamt INTEGER NOT NULL
+        amount INTEGER NOT NULL,
+        sold_by VARCHAR (30) NOT NULL REFERENCES users(email) ON DELETE CASCADE
     )"""
 
-    return [users_table, products_table, sales_table]
+    sold_items = """
+    CREATE TABLE IF NOT EXISTS solditems (
+        sale_id INTEGER NOT NULL REFERENCES sales(sale_id) ON DELETE CASCADE,
+        product INTEGER NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
+        quantity INTEGER NOT NULL
+    )"""
+
+    return [users_table, products_table, sales_table, sold_items]
 
 def drop_table_if_it_exists():
     """Drops the tables if they already exist"""
 
     drop_users_table = """
-    DROP TABLE IF EXISTS users"""
+    DROP TABLE IF EXISTS users CASCADE"""
 
     drop_products_table = """
-    DROP TABLE IF EXISTS products"""
+    DROP TABLE IF EXISTS products CASCADE"""
 
     drop_sales_table = """
-    DROP TABLE IF EXISTS sales"""
+    DROP TABLE IF EXISTS sales CASCADE"""
 
-    return [drop_users_table, drop_products_table, drop_sales_table]
+    drop_solditems_table = """
+    DROP TABLE IF EXISTS solditems CASCADE"""
+
+    return [drop_users_table, drop_products_table, drop_sales_table, drop_solditems_table]
 
 
 def query_db(query=None, db_url=None):
