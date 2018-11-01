@@ -4,6 +4,7 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 
 from instance.config import config
+from app.api.v2.db import initialize_db
 
 jwt = JWTManager()
 
@@ -11,6 +12,7 @@ def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', default='thisissecret')
+    initialize_db()
 
     jwt.init_app(app)
 
