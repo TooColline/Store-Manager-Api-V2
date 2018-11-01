@@ -30,20 +30,24 @@ class SignUp(Resource):
             request_user_role = data["role"].strip()
         except KeyError:
             return make_response(jsonify({
-                        "message": "Missing critical credentials"
+                        "message": "Your credentials are missing either your email, password or role"
                         }), 400)
 
         UserValidator.validate_user_info(self, data)
         hashed_password = generate_password_hash(request_user_password, method='sha256')
         user = users.UserModels(email=request_user_email, password=hashed_password, role=request_user_role)
-        user.save()
-        return make_response(jsonify({
-            "message": "User created successfully",
-            "user": {
-                "email": request_user_email,
-                "role": request_user_role
-            }
-        }), 200)
+
+        if user.checkifuserexists(data):
+            return make_response(jsonify({'message': 'User with that email already exists'}), 409)
+        else:
+            user.save()
+            return make_response(jsonify({
+                "message": "User account created successfully",
+                "user": {
+                    "email": request_user_email,
+                    "role": request_user_role
+                }
+            }), 200)
 
 
 class Login(Resource):
@@ -52,7 +56,7 @@ class Login(Resource):
         data = request.get_json()
         if not data:
             return make_response(jsonify({
-                "message": "Kindly input your information"
+                "message": "Kindly input your login credentials"
             }
             ), 400)
 
@@ -77,6 +81,6 @@ class Login(Resource):
                             "message": "You are successfully logged in",
                             "token": token.decode("UTF-8")}), 200)
         return make_response(jsonify({
-            "message": "Wrong credentials entered"
+            "message": "Wrong credentials entered please try again"
         }
         ), 403)
