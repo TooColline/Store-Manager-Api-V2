@@ -7,10 +7,11 @@ from psycopg2 import sql, extras
 
 class UserModels():
     '''Initializes a new user'''
-    def __init__(self, email, password, role):
+    def __init__(self, email=None, password=None, role=None, token=None):
         self.email = email
         self.password = password
         self.role = role
+        self.token = token
         
     def save(self):
         '''Saves a user by appending them to the users table'''
@@ -42,3 +43,10 @@ class UserModels():
             
             return db.select_from_db(query)
         return False
+
+    def logout(self):
+        query = """
+        INSERT INTO blacklist (token) VALUES ('{}')
+        """.format(self.token)
+
+        return db.insert_to_db(query)

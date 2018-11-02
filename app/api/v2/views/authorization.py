@@ -13,6 +13,7 @@ from flask_jwt_extended import (
 
 from instance import config
 from ..utils.user_validator import UserValidator
+from ..utils import token_verification
 from ..models import users
 
 class SignUp(Resource):
@@ -84,3 +85,14 @@ class Login(Resource):
             "message": "Wrong credentials entered please try again"
         }
         ), 403)
+
+class Logout(Resource):
+    def post(self):
+        logged_user = token_verification.verify_tokens()
+        token = request.headers['Authorization']
+        user = users.UserModels(token=token)
+        user.logout()
+
+        return make_response(jsonify({
+            'message': '{} has been logged out successfully'.format(logged_user)
+        }), 200)
