@@ -56,7 +56,13 @@ def create_db_tables():
         quantity INTEGER NOT NULL
     )"""
 
-    return [users_table, products_table, sales_table, sold_items]
+    blacklist_table = """
+    CREATE TABLE IF NOT EXISTS blacklist (
+        token VARCHAR (300) NOT NULL
+    )
+    """
+
+    return [users_table, products_table, sales_table, sold_items, blacklist_table]
 
 def drop_table_if_it_exists():
     """Drops the tables if they already exist"""
@@ -73,7 +79,10 @@ def drop_table_if_it_exists():
     drop_solditems_table = """
     DROP TABLE IF EXISTS solditems CASCADE"""
 
-    return [drop_users_table, drop_products_table, drop_sales_table, drop_solditems_table]
+    drop_blacklist_table = """
+    DROP TABLE IF EXISTS blacklist CASCADE"""
+
+    return [drop_users_table, drop_products_table, drop_sales_table, drop_solditems_table, drop_blacklist_table]
 
 
 def query_db(query=None, db_url=None):
