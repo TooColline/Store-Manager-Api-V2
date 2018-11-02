@@ -13,3 +13,4 @@ API.add_resource(sales.FetchSpecificSale, '/sales/<int:sale_id>')
 
 API_AUTH.add_resource(authorization.SignUp, '/signup')
 API_AUTH.add_resource(authorization.Login, '/login')
+API_AUTH.add_resource(authorization.Logout, '/logout')
