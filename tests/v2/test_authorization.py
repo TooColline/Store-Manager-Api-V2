@@ -198,4 +198,17 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
         self.assertTrue(general_helper_functions.convert_json(
         resp)['message'], "You are successfully logged in!")
         self.assertEqual(resp.status_code, 200)
+
+    def test_logout_user(self):
+        self.register_admin_test_account()
+        token = self.login_admin_test()
+
+        response = self.app_test_client.post('{}/auth/logout'.format(
+            self.base_url), headers=dict(Authorization=token),
+            content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(general_helper_functions.convert_json(
+            response)['message'], "admin@gmail.com has been logged out successfully"
+        )
     
