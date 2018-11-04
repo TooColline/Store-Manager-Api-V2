@@ -8,6 +8,7 @@ from .. import db
 
 def verify_tokens():
         token = None
+        token = """SELECT"""
         if 'Authorization' in request.headers:
             token = request.headers['Authorization']
         if not token:
@@ -23,18 +24,18 @@ def verify_tokens():
                 "Message": "This token is invalid"
             }), 403))
 
-def verify_post_product_fields(product_price, product_name, category):
-    if not isinstance(product_price, int):
+def verify_post_product_fields(price, name, category, min_quantity, inventory):
+    if not isinstance(price, int):
         abort(make_response(jsonify(
             message="Product price should be an integer"
         ), 400))
 
-    if product_price < 1:
+    if price < 1:
         abort(make_response(jsonify(
             message="Price of the product should be a positive integer"
         ), 400))
 
-    if not isinstance(product_name, str):
+    if not isinstance(name, str):
         abort(make_response(jsonify(
             message="Product name should be in a string format"
         ), 400))
@@ -42,4 +43,14 @@ def verify_post_product_fields(product_price, product_name, category):
     if not isinstance(category, str):
         abort(make_response(jsonify(
             message="Category should be in a string format"
+        ), 400))
+    
+    if not isinstance(min_quantity, int):
+        abort(make_response(jsonify(
+            message="The minimun quantity should be an integer"
+        ), 400))
+    
+    if not isinstance(inventory, int):
+        abort(make_response(jsonify(
+            message="The inventory should be an integer"
         ), 400))

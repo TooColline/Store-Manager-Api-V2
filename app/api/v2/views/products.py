@@ -37,7 +37,7 @@ class Products(Resource):
             # If the product added is missing a required parameter
             general_helper_functions.miss_parameter_required()
 
-        token_verification.verify_post_product_fields(price, name, category)
+        token_verification.verify_post_product_fields(price, name, category, min_quantity, inventory)
         user_validator.UserValidator.check_for_duplication("name", "products", name)
 
         product_added = products.ProductsModel(name=name, price=price, min_quantity=min_quantity, inventory=inventory, category=category)
@@ -64,9 +64,9 @@ class Products(Resource):
         fetched = fetch.fetch_all_the_products()
 
         if not fetched:
-            abort(make_response(jsonify({
+            return make_response(jsonify({
                 "message": "Sorry, there are no products in the database yet"
-            })), 404)
+            }), 404)
 
         response = make_response(jsonify({
             "message": "All the products have been fetched successfully",
@@ -106,14 +106,15 @@ class FetchSpecificProduct(Resource):
             name = data['name']
             price = data['price']
             category = data['category']
-
+            min_quantity = data['min_quantity']
+            inventory = data['inventory']
         except:
             return make_response(jsonify({
                 "message":"Update the fields you require to"
             }), 403)
             
         general_helper_functions.json_null_request(data)
-        token_verification.verify_post_product_fields(price, name, category)
+        token_verification.verify_post_product_fields(price, name, category, min_quantity, inventory)
 
         get_product_name = data['name'].strip()
         get_category = data['category'].strip()
