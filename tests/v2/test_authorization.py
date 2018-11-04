@@ -209,6 +209,6 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(general_helper_functions.convert_json(
-            response)['message'], "admin@gmail.com has been logged out successfully"
+            response)['message'], "Logged out successfully"
         )
     
