@@ -143,6 +143,7 @@ class Products(base_test.BaseTestClass):
 
     #     self.register_admin_test_account()
     #     token = self.login_admin_test()
+    #     print(token)
 
     #     insert_dummy_product = """INSERT INTO products (name, price, min_quantity, inventory, category)
     #     VALUES ('Carpet', 17000, 7, 7, 'Home & Furniture')"""
@@ -151,13 +152,14 @@ class Products(base_test.BaseTestClass):
     #     query = """SELECT * FROM products WHERE name = 'Carpet'"""
     #     product_id = db.select_from_db(query)
     #     print(product_id[0][0])
+    #     token="Bearer " + token
     #     response = self.app_test_client.get(
     #         '{}/products/{}'.format(self.base_url, product_id[0][0],
     #         headers=dict(Authorization=token),
     #         content_type='application/json'
     #         ))
 
-    #     self.assertEqual(response.status_code, 200)
+    #     # self.assertEqual(response.status_code, 200)
     #     self.assertEqual(general_helper_functions.convert_json(
     #         response), ['product'][0][1], 'Carpet')
         
@@ -195,7 +197,9 @@ class Products(base_test.BaseTestClass):
              json={
                  'name':'Bedcover',
                  'price': 1500,
-                 'category':'Beddings'
+                 'category':'Beddings',
+                 'min_quantity': 7,
+                 'inventory': 7
              },
             headers=dict(Authorization=token),
             content_type='application/json')
