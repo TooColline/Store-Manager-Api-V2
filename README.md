@@ -33,12 +33,12 @@ GET | `/api/v2/products/<int:product_id>` | Get specific product
 POST | `/api/v2/saleorder` | Add sale order
 
 ### Installing the application
-1. Open your terminal and `https://github.com/TooColline/Store-Manager-Api-V2.git`
-2. Navigate to the app folder `cd Store-Manager-Api-V2`
+1. Clone repo using `https://github.com/TooColline/Store-Manager-Api-V2.git`
+2. `cd Store-Manager-Api-V2`
 3. Create a virtual environment `virtualenv venv` and activate it `source venv/bin/activate` 
 4. Install dependencies of the application using `pip3 install -r requirements.txt`
 5. Export these environment variables ```export FLASK_APP="run.py"``` for your app and ```export JWT_SECRET_KEY=yourkey```
-6. Run the application using `python3 run.py` or `flask run`
+6. Run the application `python3 run.py` or `flask run`
 
 ### Tests
 Run this command inside your virtual environment: `coverage run --source=app.api.v2.views -m pytest /tests/v2 -v -W error::UserWarning && coverage report`
@@ -56,7 +56,7 @@ This was challenge 3 as part of the Bootcamp 33 NBO Andela.
 Too Collins
 
 ## Documentation
-
+[![API End points documentation] https://documenter.getpostman.com/view/5601454/RzZ4q25y
 
 ## Deployment
-
+[![Heroku] https://a-store-manager-app-api-v2.herokuapp.com/
