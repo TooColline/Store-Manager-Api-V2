@@ -13,7 +13,14 @@ def verify_tokens():
             token = request.headers['Authorization']
         if not token:
             abort(make_response(jsonify({
-                                 "Message": "You need to login"}), 401))
+                            "Message": "You need to login"}), 401))
+        
+        query = """SELECT token FROM blacklist WHERE token = '{}'""".format(token)
+        blacklist = db.select_from_db(query)
+        if blacklist:
+            abort(make_response(jsonify({
+                            "Message": "You need to login again"}), 401))
+
         try:
             data = jwt.decode(token, os.getenv('JWT_SECRET_KEY', default='thisissecret'), algorithms=['HS256'])
             return data['email']

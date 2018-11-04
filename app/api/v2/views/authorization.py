@@ -79,7 +79,7 @@ class Login(Resource):
                                 (minutes=30)
             }, os.getenv('JWT_SECRET_KEY', default='thisissecret'))
             return make_response(jsonify({
-                            "message": "You are successfully logged in",
+                            "message": "Successfully logged in",
                             "token": token.decode("UTF-8")}), 200)
         return make_response(jsonify({
             "message": "Wrong credentials entered please try again"
@@ -88,11 +88,10 @@ class Login(Resource):
 
 class Logout(Resource):
     def post(self):
-        logged_user = token_verification.verify_tokens()
         token = request.headers['Authorization']
         user = users.UserModels(token=token)
         user.logout()
 
         return make_response(jsonify({
-            'message': '{} has been logged out successfully'.format(logged_user)
+            'message': 'Logged out successfully'
         }), 200)
