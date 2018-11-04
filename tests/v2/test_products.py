@@ -113,7 +113,7 @@ class Products(base_test.BaseTestClass):
 
         self.assertEqual(general_helper_functions.convert_json(
             response)['message'],
-            'Sorry. A product with a similar name already exists in the database.')
+            'Product already exists')
     def test_get_all_products(self):
         """Test GET /products - when products exist"""
         self.register_admin_test_account()

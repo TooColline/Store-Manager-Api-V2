@@ -110,7 +110,7 @@ class FetchSpecificProduct(Resource):
             inventory = data['inventory']
         except:
             return make_response(jsonify({
-                "message":"Update the fields you require to"
+                "message":"Update only the fields you require to"
             }), 403)
             
         general_helper_functions.json_null_request(data)

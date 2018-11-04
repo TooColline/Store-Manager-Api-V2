@@ -40,10 +40,7 @@ class UserValidator():
     
     @staticmethod
     def check_for_duplication(column, table, value):
-        """Checks for a value duplication
-
-        Aborts if there is a duplication
-        """
+        """Checks if products already exists"""
         
         query = """
         SELECT {} FROM {} WHERE {}.{} = '{}'
@@ -53,4 +50,4 @@ class UserValidator():
 
         if duplicated:
             abort(make_response(jsonify(
-                message="Sorry. A product with a similar name already exists in the database."), 400))
+                message="Product already exists"), 400))
