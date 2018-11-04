@@ -53,10 +53,10 @@ Run this command inside your virtual environment: `coverage run --source=app.api
 This was challenge 3 as part of the Bootcamp 33 NBO Andela.
 
 ## Author
-Too Collins
+[Too Collins](https://github.com/TooColline)
 
 ## Documentation
-[![API End points documentation] https://documenter.getpostman.com/view/5601454/RzZ4q25y
+[API End points documentation](https://documenter.getpostman.com/view/5601454/RzZ4q25y)
 
 ## Deployment
-[![Heroku] https://a-store-manager-app-api-v2.herokuapp.com/
+[Heroku](https://a-store-manager-app-api-v2.herokuapp.com/)
