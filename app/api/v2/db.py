@@ -1,5 +1,6 @@
 """This module initializes the db connection and run queries to set up tables"""
 import psycopg2
+import psycopg2.extras
 import sys
 
 from instance.config import config
@@ -94,7 +95,7 @@ def query_db(query=None, db_url=None):
     try:
         # connecting to the db
         conn = psycopg2.connect(db_url)
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         if query:
             cursor.execute(query)
