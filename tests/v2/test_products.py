@@ -12,6 +12,7 @@ class Products(base_test.BaseTestClass):
 
         self.register_admin_test_account()
         token = self.login_admin_test()
+        print(token)
 
         response = self.app_test_client.post('{}/products'.format(
             self.base_url), json=self.Product, headers=dict(Authorization=token),
@@ -23,13 +24,13 @@ class Products(base_test.BaseTestClass):
             response)['product']['name'], self.Product['name'])
 
         self.assertEqual(general_helper_functions.convert_json(
-            response)['product']['price'], 17000)
+            response)['product']['price'], self.Product['price'])
 
         self.assertEqual(general_helper_functions.convert_json(
-            response)['product']['min_quantity'], 7)
+            response)['product']['min_quantity'], self.Product['min_quantity'])
         
         self.assertEqual(general_helper_functions.convert_json(
-            response)['product']['inventory'], 7)
+            response)['product']['inventory'], self.Product['inventory'])
 
         self.assertEqual(general_helper_functions.convert_json(
             response)['product']['category'], self.Product['category'])
@@ -133,35 +134,34 @@ class Products(base_test.BaseTestClass):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(general_helper_functions.convert_json(
-            response)['products'][0][1], self.Product['name'])
+            response)['products'][0]['name'], self.Product['name'])
         self.assertEqual(general_helper_functions.convert_json(
             response)['message'],
             'All the products have been fetched successfully')
     
-    # def test_get_specific_product(self):
-    #     """Test GET /products/<int:product_id> if the product is available in store"""
+    def test_get_specific_product(self):
+        """Test GET /products/<int:product_id> if the product is available in store"""
 
-    #     self.register_admin_test_account()
-    #     token = self.login_admin_test()
-    #     print(token)
+        self.register_admin_test_account()
+        token = self.login_admin_test()
 
-    #     insert_dummy_product = """INSERT INTO products (name, price, min_quantity, inventory, category)
-    #     VALUES ('Carpet', 17000, 7, 7, 'Home & Furniture')"""
-    #     db.insert_to_db(insert_dummy_product)
+        insert_dummy_product = """INSERT INTO products (name, price, min_quantity, inventory, category)
+        VALUES ('Carpet', 17000, 7, 7, 'Home & Furniture')"""
+        db.insert_to_db(insert_dummy_product)
 
-    #     query = """SELECT * FROM products WHERE name = 'Carpet'"""
-    #     product_id = db.select_from_db(query)
-    #     print(product_id[0][0])
-    #     token="Bearer " + token
-    #     response = self.app_test_client.get(
-    #         '{}/products/{}'.format(self.base_url, product_id[0][0],
-    #         headers=dict(Authorization=token),
-    #         content_type='application/json'
-    #         ))
-
-    #     # self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(general_helper_functions.convert_json(
-    #         response), ['product'][0][1], 'Carpet')
+        query = """SELECT * FROM products WHERE name = 'Carpet'"""
+        product_id = db.select_from_db(query)
+        response = self.app_test_client.get(
+            '{}/products/{}'.format(self.base_url, product_id[0]['product_id']),
+            headers=dict(Authorization=token),
+            content_type='application/json'
+            )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(general_helper_functions.convert_json(
+            response)['product'][0]['name'], 'Carpet')
+        self.assertEqual(general_helper_functions.convert_json(
+            response)['message'],
+            'Carpet retrieved successfully')
         
     
     def test_get_specific_product_not_existing(self):
@@ -193,7 +193,7 @@ class Products(base_test.BaseTestClass):
         product_id = db.select_from_db(query)
 
         response = self.app_test_client.put('{}/products/{}'.format(
-            self.base_url, product_id[0][0]),
+            self.base_url, product_id[0]['product_id']),
              json={
                  'name':'Bedcover',
                  'price': 1500,
@@ -223,7 +223,7 @@ class Products(base_test.BaseTestClass):
         product_id = db.select_from_db(query)
 
         response = self.app_test_client.put('{}/product/{}'.format(
-            self.base_url, product_id[0][0]),
+            self.base_url, product_id[0]['product_id']),
              json={
                  'name':'Sheet',
                  'category':'Bedding Cover'
@@ -248,7 +248,7 @@ class Products(base_test.BaseTestClass):
         product_id = db.select_from_db(query)
 
         response = self.app_test_client.delete('{}/products/{}'.format(
-            self.base_url, product_id[0][0]),
+            self.base_url, product_id[0]['product_id']),
             headers=dict(Authorization=token),
             content_type='application/json')
 
