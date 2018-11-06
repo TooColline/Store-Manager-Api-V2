@@ -19,9 +19,9 @@ def miss_parameter_required():
 
 def abort_user_if_not_admin(user):
     try:
-        query = """SELECT role FROM users WHERE email = '{}'""".format(user)
-        user_role = db.select_from_db(query)
-        if user_role[0][0] != "Admin":
+        query = """SELECT * FROM users WHERE email = '{}'""".format(user)
+        user = db.select_from_db(query)
+        if user[0]['role'] != "Admin":
             abort(make_response(jsonify(
                 message="Unauthorized access, please contact your administrator!"
             ), 401))

@@ -69,8 +69,8 @@ class Login(Resource):
             abort(make_response(jsonify({
                 "message": "Sorry, cannot find user with that email"}), 404))
 
-        users_email = user[0][1]
-        users_password = user[0][2]
+        users_email = user[0]['email']
+        users_password = user[0]['password']
 
         if request_user_email == users_email and check_password_hash(users_password, request_user_password):
             token = jwt.encode({

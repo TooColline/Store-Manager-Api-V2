@@ -37,7 +37,7 @@ class Sales(Resource):
         saleorder.save()
         query = """SELECT sale_id from sales WHERE amount = 0
         """
-        sale_id = db.select_from_db(query)[0][0]
+        sale_id = db.select_from_db(query)[0]['sale_id']
         for item in items:
             try:
                 name = item['name']
@@ -69,9 +69,9 @@ class Sales(Resource):
             query = """SELECT * FROM products WHERE name = '{}'""".format(name)
             product_exists = db.select_from_db(query)
             if product_exists:
-                product_id = product_exists[0][0]
-                price = product_exists[0][2]
-                inventory = product_exists[0][4]
+                product_id = product_exists[0]['product_id']
+                price = product_exists[0]['price']
+                inventory = product_exists[0]['inventory']
                 if inventory == 0:
                     revoke_sale = sales.SalesModel(sale_id=sale_id)
                     revoke_sale.revoke_sale()

@@ -91,7 +91,7 @@ class FetchSpecificProduct(Resource):
             }), 404)
         
         return make_response(jsonify({
-            "message": "{} retrieved successfully".format(fetched_product[0][1]),
+            "message": "{} retrieved successfully".format(fetched_product[0]['name']),
             "product": fetched_product
             }), 200)
     
