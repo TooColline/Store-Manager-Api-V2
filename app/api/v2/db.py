@@ -91,7 +91,7 @@ def query_db(query=None, db_url=None):
 
     conn = None
     if db_url is None:
-        db_url = config['db_url']
+        db_url = config['heroku_url']
     try:
         # connecting to the db
         conn = psycopg2.connect(db_url)
