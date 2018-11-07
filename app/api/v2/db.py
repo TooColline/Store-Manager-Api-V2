@@ -1,4 +1,5 @@
 """This module initializes the db connection and run queries to set up tables"""
+import os
 import psycopg2
 import psycopg2.extras
 import sys
@@ -7,8 +8,16 @@ from instance.config import config
 
 def initialize_db(db_url=None):
     try:
-        conn, cursor = query_db()
-        queries = drop_table_if_it_exists() + create_db_tables()
+        if os.getenv('FLASK_ENV') == 'testing':
+
+            conn, cursor = query_db()
+            queries = drop_table_if_it_exists() + create_db_tables()
+
+        else:
+
+            conn, cursor = query_db()
+            queries = create_db_tables()
+
         i = 0
         while i != len(queries):
             query = queries[i]
@@ -91,7 +100,7 @@ def query_db(query=None, db_url=None):
 
     conn = None
     if db_url is None:
-        db_url = config['heroku_url']
+        db_url = config[os.getenv('FLASK_ENV')].DB_URL
     try:
         # connecting to the db
         conn = psycopg2.connect(db_url)

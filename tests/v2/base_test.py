@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from app import create_app
@@ -10,7 +11,7 @@ class BaseTestClass(unittest.TestCase):
     def setUp(self):
         """set up application for testing"""
         
-        self.app = create_app('testing')
+        self.app = create_app(os.getenv('FLASK_ENV'))
         self.base_url = 'api/v2'
         self.app_context = self.app.app_context()
         self.app_context.push()
@@ -18,7 +19,7 @@ class BaseTestClass(unittest.TestCase):
         self.app.testing = True
 
         with self.app.app_context():
-            self.db_url = config['test_db_url']
+            self.db_url = config['testing'].DB_URL
             initialize_db(self.db_url)
 
         self.Product = {
