@@ -10,12 +10,8 @@ class Products(base_test.BaseTestClass):
     def test_add_new_product(self):
         """Test POST /products request"""
 
-        self.register_admin_test_account()
-        token = self.login_admin_test()
-        print(token)
-
         response = self.app_test_client.post('{}/products'.format(
-            self.base_url), json=self.Product, headers=dict(Authorization=token),
+            self.base_url), json=self.Product, headers=dict(Authorization=self.token),
             content_type='application/json')
 
         self.assertEqual(response.status_code, 201)
@@ -41,13 +37,12 @@ class Products(base_test.BaseTestClass):
     def test_add_new_product_price_negative(self):
         """Test POST /products with the price of a negative number or zero"""
 
-        self.register_admin_test_account()
-        token = self.login_admin_test()
+        
 
         response = self.app_test_client.post('{}/products'.format(
             self.base_url), json={
                 'name': "Hand Bag", 'price': -1, 'min_quantity': 7, 'inventory': 7, 'category':'Clothing'
-                }, headers=dict(Authorization=token),
+                }, headers=dict(Authorization=self.token),
             content_type='application/json')
 
         self.assertEqual(response.status_code, 400)
@@ -59,13 +54,10 @@ class Products(base_test.BaseTestClass):
     def test_add_new_product_name_not_string(self):
         """Test POST /products with a product name different from string"""
 
-        self.register_admin_test_account()
-        token = self.login_admin_test()
-
         response = self.app_test_client.post('{}/products'.format(
             self.base_url), json={
                 'name': 5, 'price': 100, 'min_quantity': 7, 'inventory': 7, 'category':'Clothing'
-                }, headers=dict(Authorization=token),
+                }, headers=dict(Authorization=self.token),
             content_type='application/json')
 
         self.assertEqual(response.status_code, 400)
@@ -77,13 +69,10 @@ class Products(base_test.BaseTestClass):
     def test_add_new_product_category_not_string(self):
         """Test POST /products with the category not in a string format"""
 
-        self.register_admin_test_account()
-        token = self.login_admin_test()
-
         response = self.app_test_client.post('{}/products'.format(
             self.base_url), json={
                 'name': "Hand Bag", 'price': 10, 'min_quantity': 7, 'inventory': 7, 'category':20
-                }, headers=dict(Authorization=token),
+                }, headers=dict(Authorization=self.token),
             content_type='application/json')
 
         self.assertEqual(response.status_code, 400)
@@ -95,19 +84,16 @@ class Products(base_test.BaseTestClass):
     def test_add_new_product_product_already_existing_in_db(self):
         """Test POST /products with a product name that already exists"""
 
-        self.register_admin_test_account()
-        token = self.login_admin_test()
-
         self.app_test_client.post('{}/products'.format(
             self.base_url), json={
                 'name': "Hand Bag", 'price': 10, 'min_quantity': 7, 'inventory': 7, 'category':'Clothing'
-                }, headers=dict(Authorization=token),
+                }, headers=dict(Authorization=self.token),
             content_type='application/json')
 
         response = self.app_test_client.post('{}/products'.format(
             self.base_url), json={
                 'name': "Hand Bag", 'price': 10, 'min_quantity': 7, 'inventory': 7, 'category':'Clothing'
-                }, headers=dict(Authorization=token),
+                }, headers=dict(Authorization=self.token),
             content_type='application/json')
 
         self.assertEqual(response.status_code, 400)
@@ -117,18 +103,16 @@ class Products(base_test.BaseTestClass):
             'Product already exists')
     def test_get_all_products(self):
         """Test GET /products - when products exist"""
-        self.register_admin_test_account()
-        token = self.login_admin_test()
 
         # send a dummy data response for testing
         self.app_test_client.post('{}/products'.format(
-            self.base_url), json=self.Product, headers=dict(Authorization=token),
+            self.base_url), json=self.Product, headers=dict(Authorization=self.token),
             content_type='application/json')
 
 
         response = self.app_test_client.get(
             '{}/products'.format(self.base_url),
-            headers=dict(Authorization=token),
+            headers=dict(Authorization=self.token),
             content_type='application/json'
             )
 
@@ -142,9 +126,6 @@ class Products(base_test.BaseTestClass):
     def test_get_specific_product(self):
         """Test GET /products/<int:product_id> if the product is available in store"""
 
-        self.register_admin_test_account()
-        token = self.login_admin_test()
-
         insert_dummy_product = """INSERT INTO products (name, price, min_quantity, inventory, category)
         VALUES ('Carpet', 17000, 7, 7, 'Home & Furniture')"""
         db.insert_to_db(insert_dummy_product)
@@ -153,7 +134,7 @@ class Products(base_test.BaseTestClass):
         product_id = db.select_from_db(query)
         response = self.app_test_client.get(
             '{}/products/{}'.format(self.base_url, product_id[0]['product_id']),
-            headers=dict(Authorization=token),
+            headers=dict(Authorization=self.token),
             content_type='application/json'
             )
         self.assertEqual(response.status_code, 200)
@@ -167,12 +148,9 @@ class Products(base_test.BaseTestClass):
     def test_get_specific_product_not_existing(self):
         """Test GET /products/<int:product_id> - when product does not exist"""
 
-        self.register_admin_test_account()
-        token = self.login_admin_test()
-
         response = self.app_test_client.get(
             '{}/product/1000'.format(self.base_url),
-            headers=dict(Authorization=token),
+            headers=dict(Authorization=self.token),
             content_type='application/json'
             )
 
@@ -181,12 +159,9 @@ class Products(base_test.BaseTestClass):
     def test_modify_product(self):
         """PUT /product/"""
 
-        self.register_admin_test_account()
-        token = self.login_admin_test()
-
         self.app_test_client.post('{}/products'.format(
             self.base_url), json={'name': 'Carpet', 'price': 17000, 'min_quantity': 7, 'inventory': 7,
-            'category': 'Home & Furniture'}, headers=dict(Authorization=token),
+            'category': 'Home & Furniture'}, headers=dict(Authorization=self.token),
             content_type='application/json')
 
         query = """SELECT product_id FROM products WHERE name = 'Carpet'"""
@@ -201,7 +176,7 @@ class Products(base_test.BaseTestClass):
                  'min_quantity': 7,
                  'inventory': 7
              },
-            headers=dict(Authorization=token),
+            headers=dict(Authorization=self.token),
             content_type='application/json')
 
         self.assertEqual(response.status_code, 202)
@@ -211,12 +186,9 @@ class Products(base_test.BaseTestClass):
     def test_modify_product_with_missing_parameter(self):
         """PUT /product/"""
 
-        self.register_admin_test_account()
-        token = self.login_admin_test()
-
         self.app_test_client.post('{}/products'.format(
             self.base_url), json={'name': 'Carpet', 'price': 17000, 'min_quantity': 7, 'inventory': 7,
-            'category': 'Home & Furniture'}, headers=dict(Authorization=token),
+            'category': 'Home & Furniture'}, headers=dict(Authorization=self.token),
             content_type='application/json')
 
         query = """SELECT product_id FROM products WHERE name = 'Carpet'"""
@@ -228,7 +200,7 @@ class Products(base_test.BaseTestClass):
                  'name':'Sheet',
                  'category':'Bedding Cover'
              },
-            headers=dict(Authorization=token),
+            headers=dict(Authorization=self.token),
             content_type='application/json')
 
         self.assertEqual(response.status_code, 404)
@@ -236,12 +208,9 @@ class Products(base_test.BaseTestClass):
     def test_delete_product(self):
         """DELETE /product/id"""
 
-        self.register_admin_test_account()
-        token = self.login_admin_test()
-
         self.app_test_client.post('{}/products'.format(
             self.base_url), json={'name': 'Carpet', 'price': 17000, 'min_quantity': 7, 'inventory': 7,
-            'category': 'Home & Furniture'}, headers=dict(Authorization=token),
+            'category': 'Home & Furniture'}, headers=dict(Authorization=self.token),
             content_type='application/json')
 
         query = """SELECT product_id FROM products WHERE name = 'Carpet'"""
@@ -249,7 +218,7 @@ class Products(base_test.BaseTestClass):
 
         response = self.app_test_client.delete('{}/products/{}'.format(
             self.base_url, product_id[0]['product_id']),
-            headers=dict(Authorization=token),
+            headers=dict(Authorization=self.token),
             content_type='application/json')
 
         self.assertEqual(response.status_code, 200)

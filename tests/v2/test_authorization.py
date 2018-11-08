@@ -16,9 +16,8 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
         "role": "Admin",
         "password": "Password1@"
         }, 
-        headers={
-        "Content-Type": "application/json"
-        })
+        headers=dict(Authorization=self.token),
+            content_type='application/json')
 
         data = json.loads(res.data.decode())
         print(data)
@@ -30,9 +29,8 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
 
         res = self.app_test_client.post("api/v2/auth/signup",
         json={}, 
-        headers={
-        "Content-Type": "application/json"
-        })
+        headers=dict(Authorization=self.token),
+            content_type='application/json')
 
         data = json.loads(res.data.decode())
         print(res)
@@ -48,9 +46,8 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
         "role": "Admin",
         "password": "Password2#"
         }, 
-        headers={
-        "Content-Type": "application/json"
-        })
+        headers=dict(Authorization=self.token),
+            content_type='application/json')
 
         data = json.loads(res.data.decode())
         print(data)
@@ -66,9 +63,8 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
         "role": "Admin",
         "password": "Less#"
         }, 
-        headers={
-        "Content-Type": "application/json"
-        })
+        headers=dict(Authorization=self.token),
+            content_type='application/json')
 
         data = json.loads(res.data.decode())
         print(data)
@@ -84,9 +80,8 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
         "role": "Admin",
         "password": "Password12#"
         }, 
-        headers={
-        "Content-Type": "application/json"
-        })
+        headers=dict(Authorization=self.token),
+            content_type='application/json')
 
         data = json.loads(res.data.decode())
         print(data)
@@ -102,9 +97,8 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
         "role": "Admin",
         "password": "@Nodigit"
         }, 
-        headers={
-        "Content-Type": "application/json"
-        })
+        headers=dict(Authorization=self.token),
+            content_type='application/json')
 
         data = json.loads(res.data.decode())
         print(data)
@@ -120,9 +114,8 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
         "role": "Admin",
         "password": "noupper2@"
         }, 
-        headers={
-        "Content-Type": "application/json"
-        })
+        headers=dict(Authorization=self.token),
+            content_type='application/json')
 
         data = json.loads(res.data.decode())
         print(data)
@@ -138,9 +131,8 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
         "role": "Admin",
         "password": "NOLOWER2@"
         }, 
-        headers={
-        "Content-Type": "application/json"
-        })
+        headers=dict(Authorization=self.token),
+            content_type='application/json')
 
         data = json.loads(res.data.decode())
         print(data)
@@ -156,9 +148,8 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
         "role": "Admin",
         "password": "Nospecial2"
         }, 
-        headers={
-        "Content-Type": "application/json"
-        })
+        headers=dict(Authorization=self.token),
+            content_type='application/json')
 
         data = json.loads(res.data.decode())
         print(data)
@@ -168,7 +159,6 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
     
     def test_login_with_no_credentials(self):
 
-        self.register_admin_test_account()
         resp = self.app_test_client.post("api/v2/auth/login",
         json={
 
@@ -183,7 +173,6 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
  
     def test_login_already_existing_user(self):
 
-        self.register_admin_test_account()
         resp = self.app_test_client.post("api/v2/auth/login",
         json={
             "email": "admin@gmail.com",
@@ -200,11 +189,9 @@ class TestUserAuthEndpoints(base_test.BaseTestClass):
         self.assertEqual(resp.status_code, 200)
 
     def test_logout_user(self):
-        self.register_admin_test_account()
-        token = self.login_admin_test()
 
         response = self.app_test_client.post('{}/auth/logout'.format(
-            self.base_url), headers=dict(Authorization=token),
+            self.base_url), headers=dict(Authorization=self.token),
             content_type='application/json')
 
         self.assertEqual(response.status_code, 200)

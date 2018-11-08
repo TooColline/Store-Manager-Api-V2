@@ -5,6 +5,7 @@ from app import create_app
 from instance.config import config
 from . import general_helper_functions
 from app.api.v2.db import initialize_db
+from app.api.v2.models.users import UserModels
  
 class BaseTestClass(unittest.TestCase):
  
@@ -21,6 +22,9 @@ class BaseTestClass(unittest.TestCase):
         with self.app.app_context():
             self.db_url = config['testing'].DB_URL
             initialize_db(self.db_url)
+
+        self.register_admin_test_account()
+        self.token = self.login_admin_test()
 
         self.Product = {
         "name": "Carpet",
@@ -47,18 +51,14 @@ class BaseTestClass(unittest.TestCase):
 
     def register_admin_test_account(self):
         """Registers an admin user test account"""
-            
-        resp = self.app_test_client.post("api/v2/auth/signup",
-        json={
+        
+        
+        data = {
         "email": "admin@gmail.com",
-        "role": "Admin",
         "password": "Password2@"
-        }, 
-        headers={
-        "Content-Type": "application/json"
-        })
+        }
 
-        return resp
+        return UserModels.create_admin(data)
     
     def register_attendant_test_account(self):
         #Register attendant
