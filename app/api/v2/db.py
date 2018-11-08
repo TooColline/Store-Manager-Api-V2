@@ -7,10 +7,10 @@ import sys
 from instance.config import config
 from werkzeug.security import generate_password_hash
 
-def initialize_db():
+def initialize_db(db_url=None):
     try:
         if os.getenv('FLASK_ENV') == 'testing':
-
+            conn, cursor = query_db()
             queries = drop_table_if_it_exists() + create_db_tables()
 
         else:
