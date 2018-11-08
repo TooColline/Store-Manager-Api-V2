@@ -26,12 +26,57 @@ class Sales(base_test.BaseTestClass):
         """Test if there is a missing parameter when making a sale"""
 
         response = self.app_test_client.post('{}/sales'.format(
-            self.base_url), json={'name': "Carpet"}, headers=dict(Authorization=self.token),
+            self.base_url), json={
+                'items': [{
+                    'name': 'Carpet'
+                }]
+            }, headers=dict(Authorization=self.token),
             content_type='application/json')
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(general_helper_functions.convert_json(
             response)['message'], 'Bad request. Request missing a required parameter')
+        
+    def test_add_sale_quantity_more_than_inventory(self):
+        """Test is the quantity more than inventory"""
+
+        response = self.app_test_client.post('{}/products'.format(
+        self.base_url), json=self.Product, headers=dict(Authorization=self.token),
+        content_type='application/json')
+
+        response = self.app_test_client.post('{}/sales'.format(
+            self.base_url), json={
+                'items': [
+                    {
+                        'name': 'Carpet',
+                        'quantity': 1000
+                    }
+                ]
+            }, headers=dict(Authorization=self.token),
+            content_type='application/json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(general_helper_functions.convert_json(
+            response)['message'], "Sorry, the current stock can only allow an order of 7")
+    
+    def test_add_sale_product_not_existing(self):
+        """Test POST /saleorder"""
+
+        response = self.app_test_client.post('{}/sales'.format(
+            self.base_url), json={
+                'items': [
+                    {
+                        'name': 'Phone',
+                        'quantity': 1000
+                    }
+                ]
+            }, headers=dict(Authorization=self.token),
+            content_type='application/json')
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(general_helper_functions.convert_json(
+            response)['message'], "Sorry, the product you ordered does not exist in the store.")
+
     
     def test_add_sale_with_parameters_not_in_list(self):
         """Tests whether the parameters passed when adding a sale is in a list of dictionaries"""
