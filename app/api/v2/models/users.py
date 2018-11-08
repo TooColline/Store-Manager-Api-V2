@@ -4,6 +4,7 @@ from flask import make_response, jsonify
 from .. import db
 import psycopg2
 from psycopg2 import sql, extras
+from werkzeug.security import generate_password_hash
 
 class UserModels():
     '''Initializes a new user'''
@@ -50,3 +51,16 @@ class UserModels():
         """.format(self.token)
 
         return db.insert_to_db(query)
+
+    @staticmethod
+    def create_admin(data):
+        if data:
+            if 'password' in data:
+
+                hashed_password = generate_password_hash(data['password'])
+                query = """
+                INSERT INTO users(email, password, role) VALUES(
+                    '{}', '{}', '{}'
+                )""".format(data['email'], hashed_password, 'Admin')
+
+                db.insert_to_db(query)
