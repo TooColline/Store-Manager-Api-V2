@@ -5,12 +5,12 @@ import psycopg2.extras
 import sys
 
 from instance.config import config
+from werkzeug.security import generate_password_hash
 
-def initialize_db(db_url=None):
+def initialize_db():
     try:
         if os.getenv('FLASK_ENV') == 'testing':
 
-            conn, cursor = query_db()
             queries = drop_table_if_it_exists() + create_db_tables()
 
         else:
@@ -25,7 +25,7 @@ def initialize_db(db_url=None):
             conn.commit()
             i += 1
         conn.close()
-
+        create_admin_user()
     except Exception as error:
         print("\nThe queries have not been executed : {} \n".format(error))
 
@@ -72,7 +72,25 @@ def create_db_tables():
     )
     """
 
+    
+
     return [users_table, products_table, sales_table, sold_items, blacklist_table]
+
+def create_admin_user():
+
+    hashed = generate_password_hash('123456')
+    admin_query = """
+    INSERT INTO users (email, password, role) 
+    SELECT 'defaultadmin@gmail.com', '%s', 'Admin'
+    WHERE 'defaultadmin@gmail.com' NOT IN
+    (
+        SELECT email FROM users
+    );
+    """ % hashed
+
+    conn, cursor = query_db()
+    cursor.execute(admin_query)
+    conn.commit()
 
 def drop_table_if_it_exists():
     """Drops the tables if they already exist"""
@@ -109,7 +127,6 @@ def query_db(query=None, db_url=None):
         if query:
             cursor.execute(query)
             conn.commit()
-
     except(Exception,
             psycopg2.DatabaseError,
             psycopg2.ProgrammingError) as error:
