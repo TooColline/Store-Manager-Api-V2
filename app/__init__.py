@@ -12,7 +12,7 @@ def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', default='thisissecret')
-    initialize_db()
+    
 
     jwt.init_app(app)
 
