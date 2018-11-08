@@ -15,11 +15,15 @@ from instance import config
 from ..utils.user_validator import UserValidator
 from ..utils import token_verification
 from ..models import users
+from . import general_helper_functions
 
 class SignUp(Resource):
     """Simple class that holds signup methods"""
     def post(self):
         """POST /auth/signup"""
+        logged_user = token_verification.verify_tokens()
+        general_helper_functions.abort_user_if_not_admin(logged_user)
+        
         data = request.get_json()
         if not data:
             return make_response(jsonify({
