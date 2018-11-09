@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager
 
 from instance.config import config
 from app.api.v2.db import initialize_db
+from flask_cors import CORS
 
 jwt = JWTManager()
 
@@ -21,5 +22,7 @@ def create_app(config_name):
 
     from .api.v2 import auth_v2_blueprint as v2_blueprint
     app.register_blueprint(v2_blueprint, url_prefix='/api/v2/auth')
+
+    CORS(app)
     
     return app
