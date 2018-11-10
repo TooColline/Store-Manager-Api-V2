@@ -11,6 +11,7 @@ jwt = JWTManager()
 
 def create_app(config_name):
     app = Flask(__name__)
+    CORS(app)
     app.config.from_object(config[config_name])
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', default='thisissecret')
     
@@ -22,7 +23,5 @@ def create_app(config_name):
 
     from .api.v2 import auth_v2_blueprint as v2_blueprint
     app.register_blueprint(v2_blueprint, url_prefix='/api/v2/auth')
-
-    CORS(app)
     
     return app
