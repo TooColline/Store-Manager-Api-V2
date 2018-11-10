@@ -84,6 +84,7 @@ class Login(Resource):
             }, os.getenv('JWT_SECRET_KEY', default='thisissecret'))
             return make_response(jsonify({
                             "message": "Successfully logged in",
+                            "role": user[0]['role'],
                             "token": token.decode("UTF-8")}), 200)
         return make_response(jsonify({
             "message": "Wrong credentials entered please try again"
