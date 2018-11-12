@@ -30,9 +30,9 @@ class ProductsModel():
         return db.select_from_db(query)
 
     def put(self):
-        query = """UPDATE products SET name = '{}', price = '{}',
-        min_quantity = '{}', inventory = '{}', category = '{}' WHERE product_id = {}""".format(
-            self.name, self.price, self.min_quantity, self.inventory, self.category, self.product_id)
+        query = """UPDATE products SET name = '{}', price = '{}', 
+                                                category = '{}' WHERE product_id = {}""".format(
+            self.name, self.price, self.category, self.product_id)
 
         db.insert_to_db(query)
 
