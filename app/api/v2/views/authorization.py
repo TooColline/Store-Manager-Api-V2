@@ -32,7 +32,6 @@ class SignUp(Resource):
         try:
             request_user_email = data["email"].strip()
             request_user_password = data["password"].strip()
-            request_user_role = data["role"].strip()
         except KeyError:
             return make_response(jsonify({
                         "message": "Your credentials are missing either your email, password or role"
@@ -40,7 +39,7 @@ class SignUp(Resource):
 
         UserValidator.validate_user_info(self, data)
         hashed_password = generate_password_hash(request_user_password, method='sha256')
-        user = users.UserModels(email=request_user_email, password=hashed_password, role=request_user_role)
+        user = users.UserModels(email=request_user_email, password=hashed_password, role="attendant")
 
         if user.checkifuserexists(data):
             return make_response(jsonify({'message': 'User with that email already exists'}), 409)
@@ -50,7 +49,7 @@ class SignUp(Resource):
                 "message": "User account created successfully",
                 "user": {
                     "email": request_user_email,
-                    "role": request_user_role
+                    "role": "attendant"
                 }
             }), 200)
 

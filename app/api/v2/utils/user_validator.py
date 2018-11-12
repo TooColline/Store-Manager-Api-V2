@@ -12,11 +12,10 @@ class UserValidator():
 
         self.email = data["email"]
         self.password = data["password"]
-        self.role = data["role"]
 
         valid_email = validate_email(self.email)
 
-        if self.email == "" or self.password == "" or self.role == "":
+        if self.email == "" or self.password == "":
             Message = "You are missing critical information"
             abort(400, Message)
         if not valid_email:
