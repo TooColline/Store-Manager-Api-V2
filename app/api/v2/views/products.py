@@ -105,9 +105,9 @@ class FetchSpecificProduct(Resource):
         try:
             name = data['name']
             price = data['price']
-            category = data['category']
             min_quantity = data['min_quantity']
             inventory = data['inventory']
+            category = data['category']
         except:
             return make_response(jsonify({
                 "message":"Update only the fields you require to"
