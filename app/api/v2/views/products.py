@@ -121,7 +121,7 @@ class FetchSpecificProduct(Resource):
         user_validator.UserValidator.check_for_duplication("name", "products", get_product_name)
 
         product = products.ProductsModel(product_id=product_id, name=get_product_name,
-                                    price=data['price'], category=get_category)
+                    price=data['price'], min_quantity = data['min_quantity'], inventory = data['inventory'], category=get_category)
 
         product.put()
         
