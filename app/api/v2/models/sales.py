@@ -19,6 +19,12 @@ class SalesModel():
 
         db.insert_to_db(query)
 
+    def put(self):
+        query = """
+        UPDATE sales SET amount = {} WHERE sale_id = {}
+        """.format(self.amount, self.sale_id)
+
+        db.insert_to_db(query)
     def get(self):
         """
             Queries db for user with given username

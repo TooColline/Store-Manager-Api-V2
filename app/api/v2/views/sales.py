@@ -89,8 +89,8 @@ class Sales(Resource):
                 totalamt += (price * quantity)   
                 solditems = sales.SoldItems(sale_id=sale_id, product=product_id, quantity=quantity)
                 solditems.save() 
-                update_data = sales.SalesModel(amount=totalamt, sold_by=logged_user)
-                update_data.save()
+                update_data = sales.SalesModel(amount=totalamt, sold_by=logged_user, sale_id=sale_id)
+                update_data.put()
 
                 updated_inventory = (int(inventory) - int(quantity))
                 up_query = """UPDATE products SET inventory = {} WHERE product_id = {}""".format(updated_inventory, product_id)
