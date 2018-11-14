@@ -111,7 +111,8 @@ class Sales(Resource):
     def get(self):
         """GET /sales retrieves all sales"""
 
-        token_verification.verify_tokens()
+        logged_user = token_verification.verify_tokens()
+        general_helper_functions.abort_user_if_not_admin(logged_user)
         
         fetch = sales.SalesModel()
         fetched = fetch.fetch_all_the_sales()
@@ -133,7 +134,9 @@ class FetchSpecificSale(Resource):
     def get(self, sale_id):
         """GET /products/<int:sale_id> fetches specific sale"""
         
-        token_verification.verify_tokens()
+        logged_user = token_verification.verify_tokens()
+        general_helper_functions.abort_user_if_not_admin(logged_user)
+        
         query = """SELECT * FROM sales WHERE sale_id = '{}'""".format(sale_id)
         fetched_sale = db.select_from_db(query)
 
