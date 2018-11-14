@@ -12,7 +12,7 @@ Method | Endpoint | Functionality
 --- | --- | ---
 POST | `/api/v2/auth/signup` | Create a new user
 POST | `/api/v2/auth/login` | Login a registered user
-POST | `/api/v2/auth/login` | Logout a logged in user
+POST | `/api/v2/auth/logout` | Logout a logged in user
 
 #### Admin Endpoints
 Method | Endpoint | Functionality
@@ -20,8 +20,8 @@ Method | Endpoint | Functionality
 POST | `/api/v2/products` | Add a new product
 GET | `/api/v2/products` | Get all products
 GET | `/api/v2/products/<int:product_id>` | Get specific product
-GET | `/api/v2/saleorder` | Get all sale orders
-GET | `/api/v2/saleorder/<int:sale_id>` | Get specific sale order
+GET | `/api/v2/sales` | Get all sale orders
+GET | `/api/v2/sales/<int:sale_id>` | Get specific sale order
 PUT | `/api/v2/products/<int:product_id>` | Update specific product fields
 DELETE | `/api/v2/products/<int:product_id>` | Delete specific product
 
@@ -30,7 +30,7 @@ Method | Endpoint | Functionality
 --- | --- | ---
 GET | `/api/v2/products` | Get all products
 GET | `/api/v2/products/<int:product_id>` | Get specific product
-POST | `/api/v2/saleorder` | Add sale order
+POST | `/api/v2/sales` | Add sale order
 
 ### Installing the application
 1. Clone repo using `https://github.com/TooColline/Store-Manager-Api-V2.git`
