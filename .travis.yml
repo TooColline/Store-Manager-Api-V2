@@ -1,0 +1,30 @@
+env:
+  global:
+    - APP_SETTINGS="development"
+    - DATABASE_URL="dbname='store_manager' host='localhost' port='5432' user='postgres' password='Password2#'"
+    - DATABASE_TEST_URL="dbname='store_manager_test' host='localhost' port='5432' user='postgres' password='Password2#'"
+    - SECRET_KEY="thisissecret"
+
+language: python
+
+# python version
+python:
+  - "3.6.6"
+
+# command to install dependencies
+install:
+  - pip install psycopg2-binary
+  - pip install -r requirements.txt
+
+before_script:
+  - psql -c 'CREATE DATABASE store_manager;' -U postgres
+  - psql -c 'CREATE DATABASE store_manager_test;' -U postgres
+
+# command to run tests
+script:
+  - coverage run --source=app.api.v2.views -m pytest tests/v2 -v -W error::UserWarning && coverage report
+  - coveralls
+
+# Post coverage results to coverage.io
+after-success:
+  - coveralls
